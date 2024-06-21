@@ -160,12 +160,18 @@ async def next_session(ctx):
         if session.speaker != None:
             embed.set_author(name=session.speaker)
 
-        await ctx.send(f'Here\'s the next session at {str(session.start.strftime("%H:%M ET on %B %d"))}!', embed=embed)
-        await add_reactions(await ctx.channel.fetch_message(ctx.channel.last_message_id))
-    
+        await ctx.send(f'Here\'s the next session at {str(session.start.strftime("%H:%M GMT on %B %d"))}!', embed=embed)
+        try:
+            await add_reactions(await ctx.channel.fetch_message(ctx.channel.last_message_id))
+        except Exception as e:
+            print(f"Exception getting last message ID: {e}")
+
 @bot.after_invoke
 async def after_invoke(ctx):
-    await ctx.message.delete()
+    try:
+        await ctx.message.delete()
+    except Exception as e:
+        print(f"Exception deleting message: {e}")
 
 if __name__ == '__main__':
     main()
